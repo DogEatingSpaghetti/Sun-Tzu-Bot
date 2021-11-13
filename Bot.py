@@ -1,6 +1,8 @@
 import os
 import discord
 import random
+from keep_alive import keep_alive
+
 
 Quote = ["The general who wins the battle makes many calculations in his temple before the battle is fought. The general who loses makes but few calculations beforehand.","A leader leads by example not by force.","The control of a large force is the same principle as the control of a few men: it is merely a question of dividing up their numbers.","The ultimate in disposing one's troops is to be without ascertainable shape. Then the most penetrating spies cannot pry in nor can the wise lay plans against you.","If words of command are not clear and distinct, if orders are not thoroughly understood, the general is to blame. But if his orders ARE clear, and the soldiers nevertheless disobey, then it is the fault of their officers.",
   "Strategy without tactics is the slowest route to victory. Tactics without strategy is the noise before defeat.",
@@ -45,16 +47,22 @@ Quote = ["The general who wins the battle makes many calculations in his temple 
 
 client = discord.Client()
 
+trigger = ["China","china","Chinese","chinese", "War","war","Art of War","art of war","Art of war","art of War", "strategy","Strategy","Strat", "strat", "fight","Fight","victory","Victory","quotes","Quotes","quoted","Quoted","Sun","sun","Tzu","tzu","Sun Tzu","sun tzu","Sun tzu","sun Tzu","Technoblade","technoblade","Techno","techno","never dies","wisdom","Wisdom","pvp","PvP","power"]
+
 @client.event
 async def on_ready():    
     print('We have logged in as {0.user}'.format(client))
 
 @client.event
 async def on_message(message):
+  random_seq = random.choice(Quote)
   if message.author == client.user:        
         return  
   if message.content.startswith('!quote'):
-    random_seq = random.choice(Quote)
+    await message.channel.send(random_seq)
+    
+  if any(word in message.content for word in trigger):
     await message.channel.send(random_seq)
 
+keep_alive()
 client.run(os.getenv('TOKEN'))
